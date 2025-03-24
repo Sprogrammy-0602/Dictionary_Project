@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "./context/ThemeContext";
+import { BookmarkProvider } from "./context/BookmarkContext";
+import Header from "./components/Header/Header";
+import Home from "./pages/Home";
+import BookmarksPage from "./pages/BookmarksPage";
+import WordOfTheDay from "./pages/WordOfTheDay";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider>
+      <BookmarkProvider>
+        <Router>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/bookmarks" element={<BookmarksPage />} />
+            <Route path="/word-of-the-day" element={<WordOfTheDay />} />
+          </Routes>
+        </Router>
+      </BookmarkProvider>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
