@@ -39,7 +39,7 @@ const Header = () => {
       </Navigation>
 
       <RightSection>
-      
+
         <FontSelector value={fontFamily} onChange={(e) => changeFont(e.target.value)}>
           {fonts.map((font) => (
             <FontOption key={font.value} value={font.value}>

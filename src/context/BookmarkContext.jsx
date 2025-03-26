@@ -22,7 +22,7 @@ export const BookmarkProvider = ({ children }) => {
   }, [bookmarks]);
 
   const addBookmark = (word, definition) => {
-    if (isBookmarked(word)) return; // Prevent duplicates
+    if (isBookmarked(word)) return;
 
     const newBookmark = {
       id: Date.now(),

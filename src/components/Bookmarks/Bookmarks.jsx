@@ -11,6 +11,7 @@ import {
   BookmarkTimestamp,
   BookmarkActions,
   RemoveButton,
+  BookmarksTitle,
   EmptyBookmarks,
   BookmarkIcon,
 } from "./Bookmarks.styles";
@@ -57,7 +58,7 @@ const Bookmarks = ({ onWordClick }) => {
       initial="hidden"
       animate="visible"
     >
-      <h2>Your Bookmarks</h2>
+      <BookmarksTitle>Your Bookmarks</BookmarksTitle>
       <BookmarksList>
         {bookmarks.map(({ id, word, definition, timestamp }) => (
           <BookmarkItem key={id} as={motion.div} variants={itemVariants}>
@@ -69,8 +70,8 @@ const Bookmarks = ({ onWordClick }) => {
                 {typeof definition === "string"
                   ? definition
                   : Array.isArray(definition) && definition.length > 0
-                  ? definition[0]
-                  : ""}
+                    ? definition[0]
+                    : ""}
               </BookmarkDefinition>
               <BookmarkTimestamp>{formatDate(timestamp)}</BookmarkTimestamp>
             </div>

@@ -1,8 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 import WordDetails from '../components/WordDetails/WordDetails';
 import useDictionary from '../hooks/useDictionary';
+
+const glow = keyframes`
+  from {
+    text-shadow: 0 0 5px ${props => props.theme.primary}33,
+                 0 0 10px ${props => props.theme.primary}33,
+                 0 0 20px ${props => props.theme.primary}33,
+                 0 0 40px ${props => props.theme.primary}33;
+  }
+  to {
+    text-shadow: 0 0 10px ${props => props.theme.primary}55,
+                 0 0 20px ${props => props.theme.primary}55,
+                 0 0 30px ${props => props.theme.primary}55,
+                 0 0 50px ${props => props.theme.primary}55;
+  }
+`;
+
+const slideDown = keyframes`
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`;
+
+const underline = keyframes`
+  to {
+    width: 100%;
+  }
+`;
 
 const WordOfTheDayContainer = styled.div`
   padding: 2rem;
@@ -13,17 +45,38 @@ const WordOfTheDayContainer = styled.div`
 const Header = styled.div`
   text-align: center;
   margin-bottom: 2rem;
+`;
+
+const AnimatedTitle = styled.h1`
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: ${props => props.theme.text};
+  position: relative;
+  display: inline-block;
   
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: ${props => props.theme.text};
-  }
+  animation: ${glow} 2s ease-in-out infinite alternate,
+             ${slideDown} 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
   
-  p {
-    font-size: 1.1rem;
-    color: ${props => props.theme.textSecondary};
+  &::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 3px;
+    bottom: -10px;
+    left: 0;
+    background: linear-gradient(
+      to right,
+      transparent,
+      ${props => props.theme.primary},
+      transparent
+    );
+    animation: ${underline} 1.5s ease forwards 0.8s;
   }
+`;
+
+const DateDisplay = styled.p`
+  font-size: 1.1rem;
+  color: ${props => props.theme.textSecondary};
 `;
 
 const LoadingContainer = styled.div`
@@ -39,7 +92,7 @@ const ErrorContainer = styled.div`
   color: ${props => props.theme.error};
 `;
 
-// List of interesting words for Word of the Day
+
 const wordList = [
   'serendipity', 'ephemeral', 'mellifluous', 'ineffable', 'luminous',
   'eloquent', 'resplendent', 'ethereal', 'surreptitious', 'melancholy',
@@ -50,16 +103,12 @@ const wordList = [
   'voracious', 'mendacious', 'efficacious', 'salacious'
 ];
 
-// Function to get a word based on the day
+
 const getWordOfTheDay = () => {
-  // Create a date object for today and set hours to 0 to ensure consistency throughout the day
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
-  // Use the date as a seed for selecting a word
   const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
   const wordIndex = dayOfYear % wordList.length;
-  
   return wordList[wordIndex];
 };
 
@@ -67,7 +116,7 @@ const WordOfTheDay = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { searchWord, definition, loading, error: searchError } = useDictionary();
-  
+
   useEffect(() => {
     const fetchWordOfTheDay = async () => {
       try {
@@ -80,22 +129,22 @@ const WordOfTheDay = () => {
         setIsLoading(false);
       }
     };
-    
+
     fetchWordOfTheDay();
   }, [searchWord]);
-  
+
   const formatDate = () => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     return new Date().toLocaleDateString('en-US', options);
   };
-  
+
   return (
     <WordOfTheDayContainer>
       <Header>
-        <h1>Word of the Day</h1>
-        <p>{formatDate()}</p>
+        <AnimatedTitle>Word of the Day</AnimatedTitle>
+        <DateDisplay>{formatDate()}</DateDisplay>
       </Header>
-      
+
       {isLoading || loading ? (
         <LoadingContainer>
           <motion.div
@@ -115,11 +164,11 @@ const WordOfTheDay = () => {
           <p>{error || searchError}</p>
         </ErrorContainer>
       ) : (
-        <WordDetails 
+        <WordDetails
           word={definition && definition[0] ? definition[0].word : ''}
           definition={definition}
           loading={false}
-          onSynonymClick={() => {}}
+          onSynonymClick={() => { }}
         />
       )}
     </WordOfTheDayContainer>

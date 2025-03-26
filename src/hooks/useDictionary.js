@@ -23,36 +23,46 @@ const useDictionary = (initialLanguage = "en") => {
     }
   }, [searchHistory]);
 
-  const searchWord = useCallback(async (wordToSearch) => {
-    if (!wordToSearch.trim()) {
-      setError("Please enter a word to search");
-      return;
-    }
+  const searchWord = useCallback(
+    async (wordToSearch) => {
+      if (!wordToSearch.trim()) {
+        setError("Please enter a word to search");
+        return;
+      }
 
-    setLoading(true);
-    setError(null);
+      setLoading(true);
+      setError(null);
 
-    try {
-      const data = await fetchWordDefinition(language, wordToSearch);
-      setDefinition(data);
-      setWord(wordToSearch);
+      try {
+        const data = await fetchWordDefinition(language, wordToSearch);
+        setDefinition(data);
+        setWord(wordToSearch);
 
-      // Add to search history
-      setSearchHistory((prev) => {
-        const newHistory = [
-          { word: wordToSearch, language, timestamp: new Date().toISOString() },
-          ...prev.filter(item => item.word.toLowerCase() !== wordToSearch.toLowerCase() || item.language !== language),
-        ];
-        return newHistory.slice(0, 20);
-      });
-
-    } catch (err) {
-      setError(err.message);
-      setDefinition(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [language]);
+        // Add to search history
+        setSearchHistory((prev) => {
+          const newHistory = [
+            {
+              word: wordToSearch,
+              language,
+              timestamp: new Date().toISOString(),
+            },
+            ...prev.filter(
+              (item) =>
+                item.word.toLowerCase() !== wordToSearch.toLowerCase() ||
+                item.language !== language
+            ),
+          ];
+          return newHistory.slice(0, 20);
+        });
+      } catch (err) {
+        setError(err.message);
+        setDefinition(null);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [language]
+  );
 
   const clearHistory = () => {
     setSearchHistory([]);
@@ -67,7 +77,7 @@ const useDictionary = (initialLanguage = "en") => {
     definition,
     loading,
     error,
-    searchWord,  // Used in Bookmarks.jsx
+    searchWord,
     searchHistory,
     clearHistory,
   };

@@ -18,7 +18,7 @@ const GlobalStyles = createGlobalStyle`
     color: ${(props) => props.theme.primary};
     text-decoration: none;
     transition: color 0.2s ease;
-    
+
     &:hover {
       color: ${(props) => props.theme.primaryHover};
     }
@@ -32,7 +32,7 @@ const GlobalStyles = createGlobalStyle`
     border: none;
     background-color: ${(props) => props.theme.primary};
     color: white;
-    
+
     &:hover {
       background-color: ${(props) => props.theme.primaryHover};
     }

@@ -6,18 +6,28 @@ export const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem;
-  background-color: ${(props) => props.theme.card};
+  padding: 0.8rem 2rem;
+  background: linear-gradient(
+    to right,
+    ${(props) =>
+      props.theme.background === "#1A202C" ? "#2A2A2A" : "#EFEFEF"},
+    ${(props) => (props.theme.background === "#1A202C" ? "#3A3A3A" : "#EAEAEA")}
+  );
   box-shadow: ${(props) => props.theme.shadow};
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 100;
-  transition: all 0.3s ease;
+  border-bottom: 1px solid
+    ${(props) =>
+      props.theme.background === "#1A202C"
+        ? "rgba(255, 255, 255, 0.1)"
+        : "rgba(0, 0, 0, 0.1)"};
+  transition: background 0.3s ease;
 
   @media (max-width: 768px) {
     flex-direction: column;
-    padding: 1rem;
-    gap: 1rem;
+    padding: 0.8rem;
+    gap: 0.8rem;
   }
 `;
 
@@ -26,25 +36,27 @@ export const Logo = styled(motion.div).attrs({
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.5 },
 })`
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: bold;
 
   a {
     color: ${(props) => props.theme.primary};
     text-decoration: none;
+    transition: color 0.3s ease;
 
     &:hover {
       color: ${(props) => props.theme.primaryHover};
+      text-shadow: 0px 2px ${(props) => props.theme.primaryHover}33;
     }
   }
 `;
 
 export const Navigation = styled.nav`
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
+  position: relative;
 
   @media (max-width: 768px) {
-    width: 100%;
     justify-content: center;
   }
 `;
@@ -53,7 +65,7 @@ export const NavLink = styled(RouterNavLink)`
   color: ${(props) => props.theme.textSecondary};
   text-decoration: none;
   font-weight: 500;
-  padding: 0.5rem 0;
+  font-size: 1rem;
   position: relative;
   transition: color 0.3s ease;
 
@@ -67,9 +79,13 @@ export const NavLink = styled(RouterNavLink)`
     position: absolute;
     width: 0;
     height: 2px;
-    bottom: 0;
+    bottom: -2px;
     left: 0;
-    background-color: ${(props) => props.theme.primary};
+    background: linear-gradient(
+      to right,
+      ${(props) => props.theme.primary},
+      ${(props) => props.theme.primaryHover}
+    );
     transition: width 0.3s ease;
   }
 
@@ -82,23 +98,23 @@ export const NavLink = styled(RouterNavLink)`
 export const RightSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
 `;
 
 export const FontSelector = styled.select`
-  padding: 0.5rem;
-  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
   border: 1px solid ${(props) => props.theme.border};
-  background-color: ${(props) => props.theme.backgroundSecondary};
+  background: ${(props) => props.theme.backgroundSecondary};
   color: ${(props) => props.theme.text};
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease;
 
-  &:focus {
+  &:focus,
+  &:hover {
     outline: none;
     border-color: ${(props) => props.theme.primary};
-    box-shadow: 0 0 0 2px ${(props) => props.theme.primary}33;
   }
 `;
 

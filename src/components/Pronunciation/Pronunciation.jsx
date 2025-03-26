@@ -10,10 +10,9 @@ import {
 const Pronunciation = ({ phonetics }) => {
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef(null);
-  
-  // Filter phonetics with audio URLs
+
   const audioPhonetics = phonetics.filter(phonetic => phonetic.audio && phonetic.audio.trim() !== '');
-  
+
   if (audioPhonetics.length === 0) {
     return null;
   }
@@ -24,14 +23,13 @@ const Pronunciation = ({ phonetics }) => {
       audioRef.current.src = audioUrl;
       audioRef.current.play();
       setPlaying(true);
-      
+
       audioRef.current.onended = () => {
         setPlaying(false);
       };
     }
   };
 
-  // Determine region from audio URL (e.g., "us" or "uk" in the filename)
   const getRegion = (audioUrl) => {
     const url = audioUrl.toLowerCase();
     if (url.includes('us') || url.includes('american')) return 'US';
@@ -42,9 +40,9 @@ const Pronunciation = ({ phonetics }) => {
   return (
     <PronunciationContainer>
       <audio ref={audioRef} />
-      
+
       {audioPhonetics.map((phonetic, index) => (
-        <AudioButton 
+        <AudioButton
           key={index}
           onClick={() => playAudio(phonetic.audio)}
           disabled={playing}

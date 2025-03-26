@@ -18,13 +18,13 @@ import {
   ErrorMessage
 } from './SearchBar.styles';
 
-const SearchBar = ({ 
-  onSearch, 
-  language, 
-  setLanguage, 
-  searchHistory, 
-  clearHistory, 
-  error 
+const SearchBar = ({
+  onSearch,
+  language,
+  setLanguage,
+  searchHistory,
+  clearHistory,
+  error
 }) => {
   const [inputValue, setInputValue] = useState('');
   const [showHistory, setShowHistory] = useState(false);
@@ -34,8 +34,8 @@ const SearchBar = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (historyRef.current && !historyRef.current.contains(event.target) && 
-          inputRef.current && !inputRef.current.contains(event.target)) {
+      if (historyRef.current && !historyRef.current.contains(event.target) &&
+        inputRef.current && !inputRef.current.contains(event.target)) {
         setShowHistory(false);
       }
     };
@@ -66,7 +66,7 @@ const SearchBar = ({
   return (
     <SearchContainer>
       <SearchForm onSubmit={handleSubmit}>
-        <LanguageSelector 
+        <LanguageSelector
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
         >
@@ -76,7 +76,7 @@ const SearchBar = ({
             </LanguageOption>
           ))}
         </LanguageSelector>
-        
+
         <SearchInput
           ref={inputRef}
           type="text"
@@ -86,8 +86,8 @@ const SearchBar = ({
           placeholder="Search for a word..."
           aria-label="Search for a word"
         />
-        
-        <SearchButton 
+
+        <SearchButton
           type="submit"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -95,9 +95,9 @@ const SearchBar = ({
           Search
         </SearchButton>
       </SearchForm>
-      
+
       {error && (
-        <ErrorMessage 
+        <ErrorMessage
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
@@ -105,7 +105,7 @@ const SearchBar = ({
           {error}
         </ErrorMessage>
       )}
-      
+
       {showHistory && searchHistory.length > 0 && (
         <SearchHistoryContainer ref={historyRef}>
           <div className="history-header">
@@ -114,9 +114,9 @@ const SearchBar = ({
               Clear All
             </ClearHistoryButton>
           </div>
-          
+
           {searchHistory.map((item, index) => (
-            <HistoryItem 
+            <HistoryItem
               key={index}
               onClick={() => handleHistoryItemClick(item)}
               whileHover={{ backgroundColor: 'rgba(107, 70, 193, 0.1)' }}
@@ -135,4 +135,3 @@ const SearchBar = ({
 };
 
 export default SearchBar;
-
