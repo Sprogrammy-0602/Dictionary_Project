@@ -6,11 +6,15 @@ export const BookmarksContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
+  background: ${(props) => props.theme.background};
+  border-radius: 12px;
+  box-shadow: ${(props) => props.theme.shadow};
 
   h2 {
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
     color: ${(props) => props.theme.text};
+    text-align: center;
   }
 `;
 
@@ -20,27 +24,27 @@ export const BookmarksList = styled.div`
   gap: 1rem;
 `;
 
-export const BookmarkItem = styled.div`
+export const BookmarkItem = styled(motion.div)`
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   padding: 1.5rem;
   background-color: ${(props) => props.theme.card};
   border-radius: 8px;
   box-shadow: ${(props) => props.theme.shadow};
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, background 0.3s ease;
 
   &:hover {
     transform: translateY(-3px);
+    background: ${(props) => props.theme.hover};
   }
 `;
 
 export const BookmarkWord = styled.h3`
   font-size: 1.4rem;
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   color: ${(props) => props.theme.primary};
   cursor: pointer;
-  display: inline-block;
 
   &:hover {
     text-decoration: underline;
@@ -50,7 +54,7 @@ export const BookmarkWord = styled.h3`
 export const BookmarkDefinition = styled.p`
   font-size: 1rem;
   color: ${(props) => props.theme.text};
-  margin: 0 0 0.75rem 0;
+  margin: 0.5rem 0;
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -71,17 +75,33 @@ export const BookmarkActions = styled.div`
 
 export const RemoveButton = styled(motion.button)`
   padding: 0.5rem 1rem;
-  background-color: transparent;
-  color: ${(props) => props.theme.error};
-  border: 1px solid ${(props) => props.theme.error};
+  background: ${(props) => props.theme.error};
+  color: white;
+  border: none;
   border-radius: 4px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: ${(props) => props.theme.error};
-    color: white;
+    background: ${(props) => props.theme.dangerHover};
+  }
+`;
+
+export const ClearBookmarksButton = styled(motion.button)`
+  width: 100%;
+  padding: 0.75rem;
+  background: ${(props) => props.theme.accent};
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${(props) => props.theme.accentHover};
   }
 `;
 
@@ -114,6 +134,7 @@ export const BookmarkIcon = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
+  position: relative;
 
   &::before {
     content: "";
@@ -122,7 +143,7 @@ export const BookmarkIcon = styled.div`
     border: 2px solid ${(props) => props.theme.primary};
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
-    position: relative;
+    position: absolute;
   }
 
   &::after {

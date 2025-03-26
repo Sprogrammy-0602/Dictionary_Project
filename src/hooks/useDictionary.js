@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { fetchWordDefinition } from "../utils/api";
 
+const STORAGE_KEY = "searchHistory";
+
 const useDictionary = (initialLanguage = "en") => {
   const [word, setWord] = useState("");
   const [language, setLanguage] = useState(initialLanguage);
@@ -8,60 +10,53 @@ const useDictionary = (initialLanguage = "en") => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchHistory, setSearchHistory] = useState(() => {
-    const savedHistory = localStorage.getItem("searchHistory");
-    return savedHistory ? JSON.parse(savedHistory) : [];
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch {
+      return [];
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+    if (searchHistory.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(searchHistory));
+    }
   }, [searchHistory]);
 
-  const searchWord = useCallback(
-    async (wordToSearch) => {
-      if (!wordToSearch.trim()) {
-        setError("Please enter a word to search");
-        return;
-      }
+  const searchWord = useCallback(async (wordToSearch) => {
+    if (!wordToSearch.trim()) {
+      setError("Please enter a word to search");
+      return;
+    }
 
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    setError(null);
 
-      try {
-        const data = await fetchWordDefinition(language, wordToSearch);
-        setDefinition(data);
+    try {
+      const data = await fetchWordDefinition(language, wordToSearch);
+      setDefinition(data);
+      setWord(wordToSearch);
 
-        // Add to search history
-        const historyItem = {
-          word: wordToSearch,
-          language,
-          timestamp: new Date().toISOString(),
-        };
+      // Add to search history
+      setSearchHistory((prev) => {
+        const newHistory = [
+          { word: wordToSearch, language, timestamp: new Date().toISOString() },
+          ...prev.filter(item => item.word.toLowerCase() !== wordToSearch.toLowerCase() || item.language !== language),
+        ];
+        return newHistory.slice(0, 20);
+      });
 
-        setSearchHistory((prev) => {
-          const filtered = prev.filter(
-            (item) =>
-              !(
-                item.word.toLowerCase() === wordToSearch.toLowerCase() &&
-                item.language === language
-              )
-          );
-          return [historyItem, ...filtered].slice(0, 20); // Keep last 20 searches
-        });
-
-        setWord(wordToSearch);
-      } catch (err) {
-        setError(err.message);
-        setDefinition(null);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [language]
-  );
+    } catch (err) {
+      setError(err.message);
+      setDefinition(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [language]);
 
   const clearHistory = () => {
     setSearchHistory([]);
-    localStorage.removeItem("searchHistory");
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   return {
@@ -72,7 +67,7 @@ const useDictionary = (initialLanguage = "en") => {
     definition,
     loading,
     error,
-    searchWord,
+    searchWord,  // Used in Bookmarks.jsx
     searchHistory,
     clearHistory,
   };

@@ -13,6 +13,7 @@ export const lightTheme = {
   success: "#38A169",
   card: "#FFFFFF",
   divider: "#E2E8F0",
+
 };
 
 export const darkTheme = {

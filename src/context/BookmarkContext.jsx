@@ -1,37 +1,53 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from "react";
 
 export const BookmarkContext = createContext();
 
 export const BookmarkProvider = ({ children }) => {
   const [bookmarks, setBookmarks] = useState(() => {
-    const savedBookmarks = localStorage.getItem('bookmarks');
-    return savedBookmarks ? JSON.parse(savedBookmarks) : [];
+    try {
+      const savedBookmarks = localStorage.getItem("bookmarks");
+      return savedBookmarks ? JSON.parse(savedBookmarks) : [];
+    } catch (error) {
+      console.error("Error loading bookmarks from storage:", error);
+      return [];
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    try {
+      localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+    } catch (error) {
+      console.error("Error saving bookmarks:", error);
+    }
   }, [bookmarks]);
 
   const addBookmark = (word, definition) => {
+    if (isBookmarked(word)) return; // Prevent duplicates
+
     const newBookmark = {
       id: Date.now(),
       word,
       definition,
       timestamp: new Date().toISOString(),
     };
-    setBookmarks([newBookmark, ...bookmarks]);
+
+    setBookmarks((prev) => [newBookmark, ...prev]);
   };
 
   const removeBookmark = (id) => {
-    setBookmarks(bookmarks.filter(bookmark => bookmark.id !== id));
+    setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== id));
   };
 
   const isBookmarked = (word) => {
-    return bookmarks.some(bookmark => bookmark.word.toLowerCase() === word.toLowerCase());
+    return bookmarks.some(
+      (bookmark) => bookmark.word.toLowerCase() === word.toLowerCase()
+    );
   };
 
   return (
-    <BookmarkContext.Provider value={{ bookmarks, addBookmark, removeBookmark, isBookmarked }}>
+    <BookmarkContext.Provider
+      value={{ bookmarks, addBookmark, removeBookmark, isBookmarked }}
+    >
       {children}
     </BookmarkContext.Provider>
   );

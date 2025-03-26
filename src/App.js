@@ -10,15 +10,15 @@ import WordOfTheDay from "./pages/WordOfTheDay";
 const App = () => {
   return (
     <ThemeProvider>
-      <BookmarkProvider>
+      <BookmarkProvider> {/* ✅ Wrap with BookmarkProvider */}
         <Router>
           <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/bookmarks" element={<BookmarksPage />} />
-            <Route path="/word-of-the-day" element={<WordOfTheDay />} />
-          </Routes>
-        </Router>
+            <Routes>
+              <Route path="/" element={<Home />} />
+                <Route path="/bookmarks" element={<BookmarksPage />} />
+                <Route path="/word-of-the-day" element={<WordOfTheDay />} />
+              </Routes>
+            </Router>
       </BookmarkProvider>
     </ThemeProvider>
   );
